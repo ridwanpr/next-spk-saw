@@ -17,7 +17,8 @@ export function ThemeToggle() {
 
   return (
     <Button
-      className="absolute top-4 right-4 hover:cursor-pointer"
+      variant="outline"
+      className="hover:cursor-pointer"
       onClick={toggleTheme}
     >
       {theme === "light" ? <Moon /> : <Sun />}
