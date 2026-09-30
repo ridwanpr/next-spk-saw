@@ -3,14 +3,15 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
-  Award,
-  Building2,
-  FileSpreadsheet,
-  FolderKanban,
-  LayoutDashboard,
-  ListTree,
+  CircleUser,
+  ClipboardPen,
+  Folder,
+  Home,
   LogOut,
-  SlidersHorizontal,
+  Ruler,
+  Scale,
+  Shapes,
+  Trophy,
   User,
 } from "lucide-react"
 import {
@@ -35,7 +36,7 @@ const masterNavigation = [
   {
     title: "Proyek",
     url: "/project",
-    icon: FolderKanban,
+    icon: Folder,
   },
 ]
 
@@ -43,27 +44,27 @@ const dataPreparationMenu = [
   {
     title: "Beranda",
     url: "/dashboard",
-    icon: LayoutDashboard,
+    icon: Home,
   },
   {
     title: "Kriteria",
-    url: "/kriteria",
-    icon: SlidersHorizontal,
+    url: "/criteria",
+    icon: Scale,
   },
   {
-    title: "Crips / Nilai Skala",
+    title: "Crips / Skala Nilai",
     url: "/crips",
-    icon: ListTree,
+    icon: Ruler,
   },
   {
     title: "Data Alternatif",
     url: "/alternatif",
-    icon: Building2,
+    icon: Shapes,
   },
   {
     title: "Input Nilai Alternatif",
     url: "/nilai-alternatif",
-    icon: FileSpreadsheet,
+    icon: ClipboardPen,
   },
 ]
 
@@ -71,7 +72,7 @@ const calculationMenu = [
   {
     title: "Hasil & Perangkingan",
     url: "/perangkingan",
-    icon: Award,
+    icon: Trophy,
   },
 ]
 
