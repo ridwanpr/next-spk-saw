@@ -1,5 +1,7 @@
 "use client"
 
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import {
   Award,
   Building2,
@@ -30,7 +32,7 @@ const masterNavigation = [
   },
   {
     title: "Proyek",
-    url: "/proyek",
+    url: "/project",
     icon: FolderKanban,
   },
 ]
@@ -67,6 +69,15 @@ const calculationMenu = [
 ]
 
 const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
+  const pathname = usePathname()
+
+  const checkIsActive = (url: string) => {
+    return (
+      pathname === url ||
+      (url !== "/dashboard" && pathname.startsWith(`${url}/`))
+    )
+  }
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader className="border-b border-sidebar-border pb-3">
@@ -74,15 +85,19 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
       </SidebarHeader>
 
       <SidebarContent className="gap-2 px-2 pt-2">
-        <SidebarGroup className="p-0">
+        <SidebarGroup className="p-0 pt-2">
           <SidebarMenu>
             {masterNavigation.map((item) => (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton size="default" asChild>
-                  <a href={item.url}>
+                <SidebarMenuButton
+                  size="default"
+                  asChild
+                  isActive={checkIsActive(item.url)}
+                >
+                  <Link href={item.url}>
                     <item.icon className="size-4" />
                     <span className="font-medium">{item.title}</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
@@ -97,11 +112,15 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
             <SidebarMenu>
               {dataPreparationMenu.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton size="default" asChild>
-                    <a href={item.url}>
+                  <SidebarMenuButton
+                    size="default"
+                    asChild
+                    isActive={checkIsActive(item.url)}
+                  >
+                    <Link href={item.url}>
                       <item.icon className="size-4" />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -117,11 +136,15 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
             <SidebarMenu>
               {calculationMenu.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton size="default" asChild>
-                    <a href={item.url}>
+                  <SidebarMenuButton
+                    size="default"
+                    asChild
+                    isActive={checkIsActive(item.url)}
+                  >
+                    <Link href={item.url}>
                       <item.icon className="size-4" />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
