@@ -24,6 +24,15 @@ export interface Alternatives {
   updated_at: Generated<Timestamp>;
 }
 
+export interface Crips {
+  created_at: Generated<Timestamp>;
+  criteria_id: number;
+  id: Generated<number>;
+  label: string;
+  updated_at: Generated<Timestamp>;
+  value: number;
+}
+
 export interface Criteria {
   attribute_type: CriteriaAttributeType;
   code: string;
@@ -56,6 +65,7 @@ export interface Users {
 
 export interface DB {
   alternatives: Alternatives;
+  crips: Crips;
   criteria: Criteria;
   projects: Projects;
   users: Users;
