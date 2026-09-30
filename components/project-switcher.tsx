@@ -1,6 +1,9 @@
 "use client"
 
-import { ChevronsUpDown, FolderKanban, Plus } from "lucide-react"
+import { useTransition } from "react"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { Check, ChevronsUpDown, FolderKanban, Plus } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,9 +18,25 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "./ui/sidebar"
+import { setActiveProject } from "@/lib/actions/project-actions"
+import type { getProjects, getActiveProject } from "@/lib/data/project"
 
-const ProjectSwitcher = () => {
+export interface ProjectSwitcherProps {
+  projects: Awaited<ReturnType<typeof getProjects>>
+  activeProject: Awaited<ReturnType<typeof getActiveProject>>
+}
+
+const ProjectSwitcher = ({ projects, activeProject }: ProjectSwitcherProps) => {
   const { isMobile } = useSidebar()
+  const [isPending, startTransition] = useTransition()
+  const router = useRouter()
+
+  const handleSelect = (projectId: number) => {
+    startTransition(async () => {
+      await setActiveProject(projectId)
+      router.refresh()
+    })
+  }
 
   return (
     <SidebarMenu>
@@ -26,13 +45,16 @@ const ProjectSwitcher = () => {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
+              disabled={isPending}
               className="hover:bg-sidebar-accent/50 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary font-semibold text-primary-foreground">
                 <FolderKanban className="size-4" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">Surplus Makanan</span>
+                <span className="truncate font-semibold">
+                  {activeProject ? activeProject.name : "Pilih Proyek"}
+                </span>
                 <span className="truncate text-xs text-muted-foreground">
                   SPK Metode SAW
                 </span>
@@ -50,28 +72,51 @@ const ProjectSwitcher = () => {
             <DropdownMenuLabel className="text-xs text-muted-foreground">
               Daftar Proyek
             </DropdownMenuLabel>
-            <DropdownMenuItem className="gap-2 p-2">
-              <div className="flex size-6 items-center justify-center rounded-sm border bg-muted">
-                <FolderKanban className="size-3.5" />
+
+            {projects.length === 0 ? (
+              <div className="p-2 text-xs text-muted-foreground">
+                Tidak ada proyek ditemukan
               </div>
-              <div className="font-medium">Surplus Makanan</div>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="gap-2 p-2">
-              <div className="flex size-6 items-center justify-center rounded-sm border bg-muted">
-                <FolderKanban className="size-3.5" />
-              </div>
-              <div className="font-medium text-muted-foreground">
-                Program Beasiswa
-              </div>
-            </DropdownMenuItem>
+            ) : (
+              projects.map((project) => {
+                const isSelected = activeProject?.id === project.id
+
+                return (
+                  <DropdownMenuItem
+                    key={project.id}
+                    onClick={() => handleSelect(project.id)}
+                    className="flex cursor-pointer items-center justify-between gap-2 p-2"
+                  >
+                    <div className="flex items-center gap-2 truncate">
+                      <div className="flex size-6 items-center justify-center rounded-sm border bg-muted">
+                        <FolderKanban className="size-3.5" />
+                      </div>
+                      <span
+                        className={
+                          isSelected
+                            ? "font-semibold"
+                            : "font-medium text-muted-foreground"
+                        }
+                      >
+                        {project.name}
+                      </span>
+                    </div>
+                    {isSelected && <Check className="size-4 text-primary" />}
+                  </DropdownMenuItem>
+                )
+              })
+            )}
+
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2 p-2">
-              <div className="flex size-6 items-center justify-center rounded-md border bg-background">
-                <Plus className="size-4" />
-              </div>
-              <div className="font-medium text-muted-foreground">
-                Tambah Proyek
-              </div>
+            <DropdownMenuItem asChild className="cursor-pointer gap-2 p-2">
+              <Link href="/project">
+                <div className="flex size-6 items-center justify-center rounded-md border bg-background">
+                  <Plus className="size-4" />
+                </div>
+                <div className="font-medium text-muted-foreground">
+                  Kelola Semua Proyek
+                </div>
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

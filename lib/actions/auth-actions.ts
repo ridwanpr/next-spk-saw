@@ -125,5 +125,5 @@ export async function loginUser(
     path: "/",
   })
 
-  redirect("/dashboard")
+  redirect("/project")
 }

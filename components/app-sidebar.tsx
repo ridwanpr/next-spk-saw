@@ -24,12 +24,10 @@ import {
 } from "./ui/sidebar"
 import ProjectSwitcher from "./project-switcher"
 
+type AppSidebarProps = React.ComponentProps<typeof Sidebar> &
+  React.ComponentProps<typeof ProjectSwitcher>
+
 const masterNavigation = [
-  {
-    title: "Beranda",
-    url: "/dashboard",
-    icon: LayoutDashboard,
-  },
   {
     title: "Proyek",
     url: "/project",
@@ -38,6 +36,11 @@ const masterNavigation = [
 ]
 
 const dataPreparationMenu = [
+  {
+    title: "Beranda",
+    url: "/dashboard",
+    icon: LayoutDashboard,
+  },
   {
     title: "Kriteria",
     url: "/kriteria",
@@ -68,20 +71,19 @@ const calculationMenu = [
   },
 ]
 
-const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
+const AppSidebar = ({ projects, activeProject, ...props }: AppSidebarProps) => {
   const pathname = usePathname()
 
   const checkIsActive = (url: string) => {
     return (
-      pathname === url ||
-      (url !== "/dashboard" && pathname.startsWith(`${url}/`))
+      pathname === url || (url !== "/project" && pathname.startsWith(`${url}/`))
     )
   }
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader className="border-b border-sidebar-border pb-3">
-        <ProjectSwitcher />
+        <ProjectSwitcher projects={projects} activeProject={activeProject} />
       </SidebarHeader>
 
       <SidebarContent className="gap-2 px-2 pt-2">
