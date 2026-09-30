@@ -1,6 +1,6 @@
 import { config } from "dotenv"
 import { defineConfig } from "kysely-ctl"
-import { db } from "./lib/db"
+import { db } from "./lib/db/db"
 
 config({ path: ".env" })
 

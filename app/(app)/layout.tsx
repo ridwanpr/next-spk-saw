@@ -1,10 +1,6 @@
 import AppHeader from "@/components/app-header"
 import AppSidebar from "@/components/app-sidebar"
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar"
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
   return (
