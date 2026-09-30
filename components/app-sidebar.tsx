@@ -26,6 +26,7 @@ import {
   SidebarMenuItem,
 } from "./ui/sidebar"
 import ProjectSwitcher from "./project-switcher"
+import { logoutUser } from "@/lib/actions/auth-actions"
 
 type AppSidebarProps = React.ComponentProps<typeof Sidebar> &
   React.ComponentProps<typeof ProjectSwitcher>
@@ -71,19 +72,6 @@ const calculationMenu = [
     title: "Hasil & Perangkingan",
     url: "/perangkingan",
     icon: Award,
-  },
-]
-
-const accountMenu = [
-  {
-    title: "Profil",
-    url: "/profile",
-    icon: User,
-  },
-  {
-    title: "Keluar",
-    url: "/logout",
-    icon: LogOut,
   },
 ]
 
@@ -173,20 +161,31 @@ const AppSidebar = ({ projects, activeProject, ...props }: AppSidebarProps) => {
 
       <SidebarFooter className="border-t border-sidebar-border p-2">
         <SidebarMenu>
-          {accountMenu.map((item) => (
-            <SidebarMenuItem key={item.title}>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              size="default"
+              asChild
+              isActive={checkIsActive("/profile")}
+            >
+              <Link href="/profile">
+                <User className="size-4" />
+                <span>Profil</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          <SidebarMenuItem>
+            <form action={logoutUser} className="w-full">
               <SidebarMenuButton
                 size="default"
-                asChild
-                isActive={checkIsActive(item.url)}
+                type="submit"
+                className="w-full cursor-pointer text-destructive hover:bg-destructive/10 hover:text-destructive"
               >
-                <Link href={item.url}>
-                  <item.icon className="size-4" />
-                  <span>{item.title}</span>
-                </Link>
+                <LogOut className="size-4" />
+                <span>Keluar</span>
               </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
+            </form>
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>

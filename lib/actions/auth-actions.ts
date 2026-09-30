@@ -116,7 +116,15 @@ export async function loginUser(
     })
     .execute()
 
+  const latestProject = await db
+    .selectFrom("projects")
+    .select("id")
+    .where("user_id", "=", user.id)
+    .orderBy("created_at", "desc")
+    .executeTakeFirst()
+
   const cookieStore = await cookies()
+
   cookieStore.set("session_token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -125,5 +133,28 @@ export async function loginUser(
     path: "/",
   })
 
+  if (latestProject) {
+    cookieStore.set("active_project_id", String(latestProject.id), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+    })
+  }
+
   redirect("/project")
+}
+
+export async function logoutUser() {
+  const cookieStore = await cookies()
+  const token = cookieStore.get("session_token")?.value
+
+  if (token) {
+    await db.deleteFrom("sessions").where("token", "=", token).execute()
+  }
+
+  cookieStore.delete("session_token")
+  cookieStore.delete("active_project_id")
+
+  redirect("/login")
 }
