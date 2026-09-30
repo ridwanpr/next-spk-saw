@@ -1,4 +1,4 @@
-import { ExternalLink, MoreVertical, Plus } from "lucide-react"
+import { ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -8,16 +8,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
 import { requireAuth } from "@/lib/data/session"
 import { getProjects, getActiveProject } from "@/lib/data/project"
 import { setActiveProject } from "@/lib/actions/project-actions"
+import { ProjectCardActions } from "./project-card-actions"
+import { CreateProjectDialog } from "./create-project-dialog"
 
 const Project = async () => {
   const session = await requireAuth()
@@ -36,14 +32,11 @@ const Project = async () => {
             Weighting.
           </p>
         </div>
-        <Button className="gap-2">
-          <Plus className="size-4" />
-          Proyek Baru
-        </Button>
+        <CreateProjectDialog />
       </div>
 
       {projects.length === 0 ? (
-        <div className="flex min-h-60 flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
+        <div className="flex min-h-[240px] flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
           <p className="text-sm text-muted-foreground">
             Belum ada proyek yang dibuat.
           </p>
@@ -71,20 +64,7 @@ const Project = async () => {
                       </span>
                     </div>
 
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="size-8">
-                          <MoreVertical className="size-4" />
-                          <span className="sr-only">Menu proyek</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem>Ubah Detail</DropdownMenuItem>
-                        <DropdownMenuItem className="text-destructive focus:text-destructive">
-                          Hapus Proyek
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <ProjectCardActions project={project} />
                   </div>
                 </CardHeader>
 
