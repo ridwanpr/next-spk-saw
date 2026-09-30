@@ -9,11 +9,14 @@ import {
   FolderKanban,
   LayoutDashboard,
   ListTree,
+  LogOut,
   SlidersHorizontal,
+  User,
 } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -68,6 +71,19 @@ const calculationMenu = [
     title: "Hasil & Perangkingan",
     url: "/perangkingan",
     icon: Award,
+  },
+]
+
+const accountMenu = [
+  {
+    title: "Profil",
+    url: "/profile",
+    icon: User,
+  },
+  {
+    title: "Keluar",
+    url: "/logout",
+    icon: LogOut,
   },
 ]
 
@@ -154,6 +170,25 @@ const AppSidebar = ({ projects, activeProject, ...props }: AppSidebarProps) => {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
+      <SidebarFooter className="border-t border-sidebar-border p-2">
+        <SidebarMenu>
+          {accountMenu.map((item) => (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton
+                size="default"
+                asChild
+                isActive={checkIsActive(item.url)}
+              >
+                <Link href={item.url}>
+                  <item.icon className="size-4" />
+                  <span>{item.title}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   )
 }

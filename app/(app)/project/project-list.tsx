@@ -69,7 +69,7 @@ export async function ProjectList() {
             <CardFooter className="flex items-center justify-between border-t pt-4">
               {isActive ? (
                 <Badge variant="secondary" className="text-xs">
-                  Sedang Aktif
+                  Aktif
                 </Badge>
               ) : (
                 <div />
@@ -86,7 +86,7 @@ export async function ProjectList() {
                   type="submit"
                   variant={isActive ? "outline" : "default"}
                 >
-                  Buka Proyek
+                  Buka
                   <ExternalLink className="ml-1.5 size-3.5" />
                 </Button>
               </form>
