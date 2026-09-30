@@ -64,6 +64,17 @@ export interface Projects {
   user_id: number;
 }
 
+export interface Sessions {
+  created_at: Generated<Timestamp>;
+  expired_at: Timestamp;
+  id: Generated<number>;
+  ip_address: string | null;
+  token: string;
+  updated_at: Generated<Timestamp>;
+  user_agent: string | null;
+  user_id: number;
+}
+
 export interface Users {
   created_at: Generated<Timestamp>;
   email: string;
@@ -79,5 +90,6 @@ export interface DB {
   crips: Crips;
   criteria: Criteria;
   projects: Projects;
+  sessions: Sessions;
   users: Users;
 }
