@@ -13,6 +13,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { Field, FieldLabel } from "@/components/ui/field"
 import { createProject } from "@/lib/actions/project-actions"
 
@@ -74,11 +75,12 @@ export const CreateProjectDialog = () => {
 
           <Field>
             <FieldLabel htmlFor="create-desc">Deskripsi</FieldLabel>
-            <Input
+            <Textarea
               id="create-desc"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Deskripsi singkat tujuan proyek"
+              rows={3}
               required
             />
           </Field>

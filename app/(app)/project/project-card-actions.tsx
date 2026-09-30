@@ -18,6 +18,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { Field, FieldLabel } from "@/components/ui/field"
 import { updateProject, deleteProject } from "@/lib/actions/project-actions"
 
@@ -117,11 +118,12 @@ export const ProjectCardActions = ({ project }: ProjectCardActionsProps) => {
 
             <Field>
               <FieldLabel htmlFor={`desc-${project.id}`}>Deskripsi</FieldLabel>
-              <Input
+              <Textarea
                 id={`desc-${project.id}`}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Deskripsi singkat proyek"
+                rows={3}
                 required
               />
             </Field>

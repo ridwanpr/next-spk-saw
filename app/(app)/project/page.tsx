@@ -28,15 +28,15 @@ const Project = async () => {
             Daftar Proyek
           </h1>
           <p className="text-sm text-muted-foreground">
-            Pilih atau buat proyek baru untuk kalkulasi Simple Additive
-            Weighting.
+            Pilih atau buat proyek baru untuk mulai mengevaluasi dan menentukan
+            keputusan.
           </p>
         </div>
         <CreateProjectDialog />
       </div>
 
       {projects.length === 0 ? (
-        <div className="flex min-h-[240px] flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
+        <div className="flex min-h-60 flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
           <p className="text-sm text-muted-foreground">
             Belum ada proyek yang dibuat.
           </p>
@@ -50,7 +50,9 @@ const Project = async () => {
               <Card
                 key={project.id}
                 className={`flex flex-col justify-between transition-all hover:border-primary/50 ${
-                  isActive ? "border-primary bg-primary/5" : ""
+                  isActive
+                    ? "border-primary bg-primary/10 shadow-sm ring-1 ring-primary dark:bg-primary/30 dark:ring-primary/60"
+                    : ""
                 }`}
               >
                 <CardHeader className="space-y-1">
