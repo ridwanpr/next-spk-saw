@@ -38,7 +38,7 @@ export const ProjectCardActions = ({ project }: ProjectCardActionsProps) => {
   const [description, setDescription] = useState(project.description)
   const [error, setError] = useState<string | null>(null)
 
-  const handleUpdate = (e: React.FormEvent) => {
+  const handleUpdate = (e: React.SubmitEvent) => {
     e.preventDefault()
     setError(null)
 

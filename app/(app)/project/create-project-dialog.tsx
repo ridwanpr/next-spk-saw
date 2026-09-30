@@ -23,7 +23,7 @@ export const CreateProjectDialog = () => {
   const [description, setDescription] = useState("")
   const [error, setError] = useState<string | null>(null)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.SubmitEvent) => {
     e.preventDefault()
     setError(null)
 
