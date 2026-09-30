@@ -11,6 +11,15 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
 
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
+export interface Alternatives {
+  code: string;
+  created_at: Generated<Timestamp>;
+  id: Generated<number>;
+  name: string;
+  project_id: number;
+  updated_at: Generated<Timestamp>;
+}
+
 export interface Projects {
   created_at: Generated<Timestamp>;
   description: string;
@@ -31,6 +40,7 @@ export interface Users {
 }
 
 export interface DB {
+  alternatives: Alternatives;
   projects: Projects;
   users: Users;
 }
