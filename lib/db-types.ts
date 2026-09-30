@@ -24,6 +24,16 @@ export interface Alternatives {
   updated_at: Generated<Timestamp>;
 }
 
+export interface AlternativeValue {
+  alternative_id: number;
+  created_at: Generated<Timestamp>;
+  crips_id: number;
+  criteria_id: number;
+  id: Generated<number>;
+  numerical_value: Numeric;
+  updated_at: Generated<Timestamp>;
+}
+
 export interface Crips {
   created_at: Generated<Timestamp>;
   criteria_id: number;
@@ -64,6 +74,7 @@ export interface Users {
 }
 
 export interface DB {
+  alternative_value: AlternativeValue;
   alternatives: Alternatives;
   crips: Crips;
   criteria: Criteria;
