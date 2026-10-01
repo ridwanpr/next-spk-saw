@@ -1,5 +1,11 @@
 "use client"
 
+import { Dispatch, SetStateAction, useState } from "react"
+import { Controller, useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Selectable } from "kysely"
+import z from "zod"
+
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -26,11 +32,6 @@ import {
 import { updateCriteria } from "@/lib/actions/criteria-actions"
 import { Criteria } from "@/lib/db/db-types"
 import { editCriteriaSchema } from "@/lib/validations/criteria"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Selectable } from "kysely"
-import { Dispatch, SetStateAction, useTransition } from "react"
-import { Controller, useForm } from "react-hook-form"
-import z from "zod"
 
 interface CriteriaDialogProps {
   editOpen: boolean
@@ -43,28 +44,32 @@ const CriteriaDialog = ({
   setEditOpen,
   criteriaEdited,
 }: CriteriaDialogProps) => {
-  const [isPending, startTransition] = useTransition()
+  const [isPending, setIsPending] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const editForm = useForm<z.infer<typeof editCriteriaSchema>>({
     resolver: zodResolver(editCriteriaSchema),
-    values: {
+    defaultValues: {
       name: criteriaEdited.name,
       code: criteriaEdited.code,
       attribute_type: criteriaEdited.attribute_type,
       weight: String(criteriaEdited.weight),
     },
-    resetOptions: {
-      keepDirtyValues: false,
-    },
   })
 
-  const onSubmitEdit = (data: z.infer<typeof editCriteriaSchema>) => {
-    startTransition(async () => {
-      const res = await updateCriteria(criteriaEdited.id, data)
-      if (res?.success) {
-        setEditOpen(false)
-      }
-    })
+  const onSubmitEdit = async (data: z.infer<typeof editCriteriaSchema>) => {
+    setIsPending(true)
+    setError(null)
+
+    const res = await updateCriteria(criteriaEdited.id, data)
+    setIsPending(false)
+
+    if (!res.success) {
+      setError(res.error || "Gagal memperbarui kriteria")
+      return
+    }
+
+    setEditOpen(false)
   }
 
   return (
@@ -73,6 +78,11 @@ const CriteriaDialog = ({
         <DialogHeader>
           <DialogTitle>Edit Kriteria</DialogTitle>
         </DialogHeader>
+
+        {error && (
+          <p className="mb-4 text-sm font-medium text-destructive">{error}</p>
+        )}
+
         <form onSubmit={editForm.handleSubmit(onSubmitEdit)}>
           <FieldGroup>
             {/* Nama */}
