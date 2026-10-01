@@ -3,7 +3,7 @@
 import { useTransition } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { Check, ChevronsUpDown, FolderKanban, Plus } from "lucide-react"
+import { Check, ChevronsUpDown, Plus } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,8 +48,10 @@ const ProjectSwitcher = ({ projects, activeProject }: ProjectSwitcherProps) => {
               disabled={isPending}
               className="hover:bg-sidebar-accent/50 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <div className="flex aspect-square size-8 shrink-0 items-center justify-center rounded-lg bg-primary font-semibold text-primary-foreground">
-                <FolderKanban className="size-4" />
+              <div className="flex aspect-square size-8 shrink-0 items-center justify-center rounded-lg bg-primary text-sm font-semibold text-primary-foreground">
+                {activeProject?.name
+                  ? activeProject.name.charAt(0).toUpperCase()
+                  : "P"}
               </div>
               <div className="grid min-w-0 flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">

@@ -1,24 +1,7 @@
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Suspense } from "react"
 import CriteriaList from "./criteria-list"
 import CriteriaListSkeleton from "./criteria-list-skeleton"
+import CriteriaCreate from "./criteria-create"
 
 const Criteria = async () => {
   return (
@@ -39,67 +22,7 @@ const Criteria = async () => {
           </Suspense>
         </div>
         <div className="col-span-12 md:col-span-5">
-          <Card>
-            <CardHeader>
-              <CardTitle>Tambah Kriteria</CardTitle>
-            </CardHeader>
-            <form>
-              <CardContent>
-                <FieldGroup>
-                  <Field>
-                    <FieldLabel htmlFor="create-name-criteria">Nama</FieldLabel>
-                    <Input
-                      type="text"
-                      id="create-name-criteria"
-                      placeholder="Nama kriteria"
-                    />
-                  </Field>
-                  <Field>
-                    <FieldLabel htmlFor="create-code-criteria">
-                      Kode Kriteria
-                    </FieldLabel>
-                    <Input
-                      type="text"
-                      id="create-code-criteria"
-                      placeholder="Kode kriteria (ex: C1)"
-                    />
-                  </Field>
-                  <Field>
-                    <FieldLabel htmlFor="create-attribute-criteria">
-                      Atribut
-                    </FieldLabel>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Benefit/Cost" />
-                      </SelectTrigger>
-                      <SelectContent id="create-attribute-criteria">
-                        <SelectGroup>
-                          <SelectItem value="benefit">Benefit</SelectItem>
-                          <SelectItem value="cost">Cost</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </Field>
-                  <Field>
-                    <FieldLabel htmlFor="create-weight-criteria">
-                      Bobot
-                    </FieldLabel>
-                    <Input
-                      type="number"
-                      id="create-weight-criteria"
-                      min="1"
-                      max="100"
-                      placeholder="0-100"
-                    />
-                  </Field>
-                </FieldGroup>
-              </CardContent>
-              <CardFooter className="mt-6 flex items-center justify-end gap-1">
-                <Button variant="secondary">Reset</Button>
-                <Button variant="default">Simpan</Button>
-              </CardFooter>
-            </form>
-          </Card>
+          <CriteriaCreate />
         </div>
       </div>
     </div>
