@@ -1,5 +1,6 @@
 import { cookies } from "next/headers"
 import { db } from "@/lib/db/db"
+import { redirect } from "next/navigation"
 
 export async function getProjects(userId: number) {
   return await db
@@ -10,27 +11,35 @@ export async function getProjects(userId: number) {
     .execute()
 }
 
+// only get the active project data
 export async function getActiveProject(userId: number) {
   const cookieStore = await cookies()
   const activeId = cookieStore.get("active_project_id")?.value
 
-  if (activeId) {
-    const project = await db
-      .selectFrom("projects")
-      .selectAll()
-      .where("id", "=", Number(activeId))
-      .where("user_id", "=", userId)
-      .executeTakeFirst()
+  if (!activeId) return undefined
 
-    if (project) return project
-  }
-
-  return await db
+  const project = await db
     .selectFrom("projects")
     .selectAll()
+    .where("id", "=", Number(activeId))
     .where("user_id", "=", userId)
-    .orderBy("created_at", "desc")
     .executeTakeFirst()
+
+  return project
+}
+
+// always use this for feature that always need active project and trigger fail-fast
+export async function requireActiveProject(userId: number) {
+  const project = await getActiveProject(userId)
+
+  if (!project) {
+    const message = encodeURIComponent(
+      "Belum ada proyek aktif. Silakan buat atau pilih proyek terlebih dahulu untuk melanjutkan."
+    )
+    redirect(`/project?error=${message}`)
+  }
+
+  return project
 }
 
 export type Project = Awaited<ReturnType<typeof getProjects>>[number]

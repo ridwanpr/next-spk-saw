@@ -111,53 +111,57 @@ const AppSidebar = ({ projects, activeProject, ...props }: AppSidebarProps) => {
           </SidebarMenu>
         </SidebarGroup>
 
-        <SidebarGroup className="p-0 pt-2">
-          <SidebarGroupLabel className="text-xs tracking-wider text-muted-foreground uppercase">
-            Data Preparation
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {dataPreparationMenu.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    size="default"
-                    asChild
-                    isActive={checkIsActive(item.url)}
-                  >
-                    <Link href={item.url}>
-                      <item.icon className="size-4" />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {activeProject && (
+          <>
+            <SidebarGroup className="p-0 pt-2">
+              <SidebarGroupLabel className="text-xs tracking-wider text-muted-foreground uppercase">
+                Data Preparation
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {dataPreparationMenu.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton
+                        size="default"
+                        asChild
+                        isActive={checkIsActive(item.url)}
+                      >
+                        <Link href={item.url}>
+                          <item.icon className="size-4" />
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
 
-        <SidebarGroup className="p-0 pt-2">
-          <SidebarGroupLabel className="text-xs tracking-wider text-muted-foreground uppercase">
-            Kalkulasi SAW
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {calculationMenu.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    size="default"
-                    asChild
-                    isActive={checkIsActive(item.url)}
-                  >
-                    <Link href={item.url}>
-                      <item.icon className="size-4" />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+            <SidebarGroup className="p-0 pt-2">
+              <SidebarGroupLabel className="text-xs tracking-wider text-muted-foreground uppercase">
+                Kalkulasi SAW
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {calculationMenu.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton
+                        size="default"
+                        asChild
+                        isActive={checkIsActive(item.url)}
+                      >
+                        <Link href={item.url}>
+                          <item.icon className="size-4" />
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </>
+        )}
       </SidebarContent>
 
       <SidebarFooter className="border-t border-sidebar-border p-2">

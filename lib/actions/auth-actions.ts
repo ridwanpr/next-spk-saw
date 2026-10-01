@@ -116,13 +116,6 @@ export async function loginUser(
     })
     .execute()
 
-  const latestProject = await db
-    .selectFrom("projects")
-    .select("id")
-    .where("user_id", "=", user.id)
-    .orderBy("created_at", "desc")
-    .executeTakeFirst()
-
   const cookieStore = await cookies()
 
   cookieStore.set("session_token", token, {
@@ -132,15 +125,6 @@ export async function loginUser(
     expires: expiredAt,
     path: "/",
   })
-
-  if (latestProject) {
-    cookieStore.set("active_project_id", String(latestProject.id), {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-    })
-  }
 
   redirect("/project")
 }

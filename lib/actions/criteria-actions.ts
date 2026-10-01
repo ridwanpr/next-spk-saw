@@ -1,18 +1,16 @@
+"use server"
+
+import { redirect } from "next/navigation"
 import { Insertable } from "kysely"
 import { requireAuth } from "../data/session"
 import { db } from "../db/db"
 import { CriteriaCreate, editCriteriaSchema } from "../validations/criteria"
-import { getActiveProject } from "../data/project"
+import { getActiveProject, requireActiveProject } from "../data/project"
+import { revalidatePath } from "next/cache"
 
 export const createCriteria = async (input: Insertable<CriteriaCreate>) => {
   const session = await requireAuth()
-  const activeProject = await getActiveProject(session.userId)
-
-  if (!activeProject) {
-    throw new Error(
-      "Terjadi kesalahan, coba pilih ulang proyek yang akan dibuka"
-    )
-  }
+  const activeProject = await requireActiveProject(session.userId)
 
   const validation = editCriteriaSchema.safeParse(input)
 
@@ -28,7 +26,7 @@ export const createCriteria = async (input: Insertable<CriteriaCreate>) => {
   const newCriteria = await db
     .insertInto("criteria")
     .values({
-      project_id: activeProject?.id,
+      project_id: activeProject.id,
       name,
       code,
       attribute_type,
@@ -44,5 +42,6 @@ export const createCriteria = async (input: Insertable<CriteriaCreate>) => {
     }
   }
 
+  revalidatePath("/criteria")
   return { success: true }
 }

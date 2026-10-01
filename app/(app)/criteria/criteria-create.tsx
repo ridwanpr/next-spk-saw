@@ -23,6 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { createCriteria } from "@/lib/actions/criteria-actions"
 import { editCriteriaSchema } from "@/lib/validations/criteria"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
@@ -39,8 +40,12 @@ const CriteriaCreate = () => {
     },
   })
 
-  const onSubmit = (data: z.infer<typeof editCriteriaSchema>) => {
-    console.log(data)
+  const onSubmit = async (data: z.infer<typeof editCriteriaSchema>) => {
+    const res = await createCriteria(data)
+
+    if (res?.success) {
+      form.reset()
+    }
   }
 
   return (

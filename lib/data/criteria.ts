@@ -1,14 +1,10 @@
 import { db } from "../db/db"
-import { getActiveProject } from "./project"
+import { requireActiveProject } from "./project"
 import { requireAuth } from "./session"
 
 export const getProjectCriteria = async () => {
   const session = await requireAuth()
-  const activeProject = await getActiveProject(session.userId)
-
-  if (!activeProject) {
-    return []
-  }
+  const activeProject = await requireActiveProject(session.userId)
 
   return await db
     .selectFrom("criteria")
