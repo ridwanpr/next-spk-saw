@@ -11,7 +11,7 @@ import {
 import { requireActiveProject } from "../data/project"
 import { revalidatePath } from "next/cache"
 
-export const createCriteria = async (input: Insertable<CriteriaCreate>) => {
+export const createCriteria = async (input: CriteriaCreate) => {
   const session = await requireAuth()
   const activeProject = await requireActiveProject(session.userId)
 
@@ -51,7 +51,7 @@ export const createCriteria = async (input: Insertable<CriteriaCreate>) => {
 
 export const updateCriteria = async (
   criteriaId: number,
-  input: Insertable<CriteriaEdit>
+  input: CriteriaEdit
 ) => {
   const session = await requireAuth()
   const activeProject = await requireActiveProject(session.userId)
