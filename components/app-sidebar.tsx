@@ -52,7 +52,7 @@ const dataPreparationMenu = [
     icon: Scale,
   },
   {
-    title: "Crips / Skala Nilai",
+    title: "Skala Nilai",
     url: "/crips",
     icon: Ruler,
   },
