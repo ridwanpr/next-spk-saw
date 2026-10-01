@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Field, FieldGroup, FieldTitle } from "@/components/ui/field"
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import {
   Select,
@@ -47,20 +47,32 @@ const Criteria = async () => {
               <CardContent>
                 <FieldGroup>
                   <Field>
-                    <FieldTitle>Nama</FieldTitle>
-                    <Input type="text" placeholder="Nama kriteria" />
+                    <FieldLabel htmlFor="create-name-criteria">Nama</FieldLabel>
+                    <Input
+                      type="text"
+                      id="create-name-criteria"
+                      placeholder="Nama kriteria"
+                    />
                   </Field>
                   <Field>
-                    <FieldTitle>Kode Kriteria</FieldTitle>
-                    <Input type="text" placeholder="Kode kriteria (ex: C1)" />
+                    <FieldLabel htmlFor="create-code-criteria">
+                      Kode Kriteria
+                    </FieldLabel>
+                    <Input
+                      type="text"
+                      id="create-code-criteria"
+                      placeholder="Kode kriteria (ex: C1)"
+                    />
                   </Field>
                   <Field>
-                    <FieldTitle>Atribut</FieldTitle>
+                    <FieldLabel htmlFor="create-attribute-criteria">
+                      Atribut
+                    </FieldLabel>
                     <Select>
                       <SelectTrigger>
                         <SelectValue placeholder="Benefit/Cost" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent id="create-attribute-criteria">
                         <SelectGroup>
                           <SelectItem value="benefit">Benefit</SelectItem>
                           <SelectItem value="cost">Cost</SelectItem>
@@ -69,9 +81,12 @@ const Criteria = async () => {
                     </Select>
                   </Field>
                   <Field>
-                    <FieldTitle>Bobot</FieldTitle>
+                    <FieldLabel htmlFor="create-weight-criteria">
+                      Bobot
+                    </FieldLabel>
                     <Input
                       type="number"
+                      id="create-weight-criteria"
                       min="1"
                       max="100"
                       placeholder="0-100"
