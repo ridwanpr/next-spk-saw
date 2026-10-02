@@ -1,6 +1,5 @@
 "use server"
 
-import { Insertable } from "kysely"
 import { requireAuth } from "../data/session"
 import { db } from "../db/db"
 import {
