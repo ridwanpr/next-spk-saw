@@ -6,7 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Pencil, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
-import CriteriaDialog from "./criteria-dialog"
+import CriteriaEditDialog from "./criteria-edit-dialog"
+import CriteriaDeleteDialog from "./criteria-delete-dialog"
+import { deleteCriteria } from "@/lib/actions/criteria-actions"
 
 interface CriteriaClientViewProps {
   criterias: Selectable<Criteria>[]
@@ -14,12 +16,25 @@ interface CriteriaClientViewProps {
 
 const CriteriaClientView = ({ criterias }: CriteriaClientViewProps) => {
   const [editOpen, setEditOpen] = useState(false)
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
   const [criteriaEdited, setCriteriaEdited] =
     useState<Selectable<Criteria> | null>(null)
+  const [criteriaToDelete, setCriteriaToDelete] = useState<number | null>(null)
 
   const handleEdit = (criteria: Selectable<Criteria>) => {
     setCriteriaEdited(criteria)
     setEditOpen(true)
+  }
+
+  const handleDelete = async (criteriaId: number) => {
+    setError(null)
+    const res = await deleteCriteria(criteriaId)
+    if (!res.success) {
+      setError("Gagal menghapus kriteria")
+    }
+    setIsDeleteOpen(false)
   }
 
   return (
@@ -28,6 +43,7 @@ const CriteriaClientView = ({ criterias }: CriteriaClientViewProps) => {
         <CardHeader>
           <CardTitle>Daftar Kriteria</CardTitle>
         </CardHeader>
+
         <CardContent className="p-0">
           {!criterias || criterias.length === 0 ? (
             <div className="p-6 text-center text-sm text-muted-foreground">
@@ -61,7 +77,14 @@ const CriteriaClientView = ({ criterias }: CriteriaClientViewProps) => {
                   >
                     <Pencil className="size-4" />
                   </Button>
-                  <Button variant="destructive" size="icon">
+                  <Button
+                    onClick={() => {
+                      setIsDeleteOpen(true)
+                      setCriteriaToDelete(criteria.id)
+                    }}
+                    variant="destructive"
+                    size="icon"
+                  >
                     <Trash2 className="size-4" />
                   </Button>
                 </div>
@@ -71,11 +94,20 @@ const CriteriaClientView = ({ criterias }: CriteriaClientViewProps) => {
         </CardContent>
       </Card>
       {criteriaEdited && (
-        <CriteriaDialog
+        <CriteriaEditDialog
           key={criteriaEdited.id}
           editOpen={editOpen}
           setEditOpen={setEditOpen}
           criteriaEdited={criteriaEdited}
+        />
+      )}
+      {criteriaToDelete && (
+        <CriteriaDeleteDialog
+          isDeleteOpen={isDeleteOpen}
+          setIsDeleteOpen={setIsDeleteOpen}
+          handleDelete={handleDelete}
+          error={error}
+          criteriaToDelete={criteriaToDelete}
         />
       )}
     </>

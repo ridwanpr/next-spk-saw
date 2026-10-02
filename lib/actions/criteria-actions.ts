@@ -77,3 +77,19 @@ export const updateCriteria = async (
   revalidatePath("/dashboard")
   return { success: true }
 }
+
+export const deleteCriteria = async (criteriaId: number) => {
+  const session = await requireAuth()
+  const activeProject = await requireActiveProject(session.userId)
+
+  await db
+    .deleteFrom("criteria")
+    .where("id", "=", criteriaId)
+    .where("criteria.project_id", "=", activeProject.id)
+    .execute()
+
+  revalidatePath("/dashboard")
+  revalidatePath("/criteria")
+
+  return { success: true }
+}
