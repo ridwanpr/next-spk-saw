@@ -1,12 +1,22 @@
+import { Selectable } from "kysely"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Criteria } from "@/lib/db/db-types"
 
-const CripsCreate = () => {
+interface CripsCreateProps {
+  selectedCriteria?: Selectable<Criteria>
+}
+
+const CripsCreate = ({ selectedCriteria }: CripsCreateProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Skala Nilai: C1 - Jarak Tempuh</CardTitle>
+        <CardTitle>
+          {selectedCriteria
+            ? `Skala Nilai: ${selectedCriteria.code} - ${selectedCriteria.name}`
+            : "Pilih Kriteria Terlebih Dahulu"}
+        </CardTitle>
       </CardHeader>
-      <CardContent></CardContent>
+      <CardContent>{/* todo: manage crips */}</CardContent>
     </Card>
   )
 }

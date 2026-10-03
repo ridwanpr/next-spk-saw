@@ -1,9 +1,19 @@
-import { Suspense } from "react"
+import { getProjectCriteria } from "@/lib/data/criteria"
 import CripsCreate from "./crips-create"
-import CripsList from "./crips-list"
-import CripsListSkeleton from "./crips-list-skeleton"
+import CripsCriteriaList from "./crips-criteria-list"
 
-const Crips = () => {
+interface PageProps {
+  searchParams: Promise<{ criteriaId?: string }>
+}
+
+const Crips = async ({ searchParams }: PageProps) => {
+  const { criteriaId } = await searchParams
+  const criterias = await getProjectCriteria()
+
+  // default to first criteria
+  const selectedCriteria =
+    criterias.find((c) => String(c.id) === criteriaId) ?? criterias[0]
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center">
@@ -15,14 +25,15 @@ const Crips = () => {
         </div>
       </div>
 
-      <div className="min-h-vh grid grid-cols-12 gap-6">
+      <div className="grid min-h-[calc(100vh-10rem)] grid-cols-12 gap-6">
         <div className="col-span-12 md:col-span-5">
-          <Suspense fallback={<CripsListSkeleton />}>
-            <CripsList />
-          </Suspense>
+          <CripsCriteriaList
+            criterias={criterias}
+            selectedCriteriaId={selectedCriteria?.id}
+          />
         </div>
         <div className="col-span-12 md:col-span-7">
-          <CripsCreate />
+          <CripsCreate selectedCriteria={selectedCriteria} />
         </div>
       </div>
     </div>
