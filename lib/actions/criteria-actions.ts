@@ -45,6 +45,7 @@ export const createCriteria = async (input: CriteriaCreate) => {
   }
 
   revalidatePath("/criteria")
+  revalidatePath("/dashboard")
   return { success: true }
 }
 
