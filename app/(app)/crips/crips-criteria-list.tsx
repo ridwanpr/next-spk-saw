@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ExternalLink } from "lucide-react"
+import { Check, ExternalLink } from "lucide-react"
 import { Selectable } from "kysely"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -31,33 +31,51 @@ const CripsCriteriaList = ({
             return (
               <div
                 key={criteria.id}
-                className={`flex justify-between border-t border-accent p-4 transition-colors ${
-                  isSelected ? "bg-accent/40" : ""
+                className={`flex justify-between border-t border-l-4 border-accent p-4 transition-colors ${
+                  isSelected
+                    ? "border-l-primary bg-accent/30"
+                    : "border-l-transparent hover:bg-muted/10"
                 }`}
               >
                 <div className="flex items-center gap-4">
-                  <div className="flex size-9 flex-col items-center justify-center rounded-lg bg-accent">
-                    <span className="text-sm font-semibold">
-                      {criteria.code}
-                    </span>
+                  <div
+                    className={`flex size-9 flex-col items-center justify-center rounded-lg font-semibold ${
+                      isSelected
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-accent text-foreground"
+                    }`}
+                  >
+                    <span className="text-sm">{criteria.code}</span>
                   </div>
                   <div>
-                    <p className="font-semibold">{criteria.name}</p>
+                    <p className="font-semibold text-foreground">
+                      {criteria.name}
+                    </p>
                     <span className="text-xs text-muted-foreground capitalize">
                       Atribut: {criteria.attribute_type}
                     </span>
                   </div>
                 </div>
+
                 <div className="flex items-center gap-2">
-                  <p className="mr-2 font-semibold">{criteria.weight}%</p>
+                  <p className="mr-2 font-semibold text-foreground">
+                    {criteria.weight}%
+                  </p>
                   <Button
                     asChild
                     size="sm"
-                    variant={isSelected ? "default" : "outline"}
+                    variant={isSelected ? "secondary" : "outline"}
+                    className={
+                      isSelected ? "pointer-events-none gap-1.5" : "gap-1.5"
+                    }
                   >
                     <Link href={`?criteriaId=${criteria.id}`}>
-                      <ExternalLink className="mr-1 size-3.5" />
-                      {isSelected ? "Dipilih" : "Pilih"}
+                      {isSelected ? (
+                        <Check className="size-3.5 text-primary" />
+                      ) : (
+                        <ExternalLink className="size-3.5" />
+                      )}
+                      <span>{isSelected ? "Dipilih" : "Pilih"}</span>
                     </Link>
                   </Button>
                 </div>
