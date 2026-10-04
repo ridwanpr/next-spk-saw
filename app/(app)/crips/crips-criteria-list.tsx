@@ -57,17 +57,18 @@ const CripsCriteriaList = ({
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <p className="mr-2 font-semibold text-foreground">
+                <div className="flex items-center gap-3">
+                  <p className="w-16 text-right text-sm font-semibold text-foreground tabular-nums">
                     {criteria.weight}%
                   </p>
+
                   <Button
                     asChild
                     size="sm"
                     variant={isSelected ? "secondary" : "outline"}
-                    className={
-                      isSelected ? "pointer-events-none gap-1.5" : "gap-1.5"
-                    }
+                    className={`h-8 w-21 justify-center gap-1.5 ${
+                      isSelected ? "pointer-events-none" : ""
+                    }`}
                   >
                     <Link href={`?criteriaId=${criteria.id}`}>
                       {isSelected ? (
