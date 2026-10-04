@@ -25,7 +25,7 @@ const Crips = async ({ searchParams }: PageProps) => {
         </div>
       </div>
 
-      <div className="grid min-h-[calc(100vh-10rem)] grid-cols-12 gap-6">
+      <div className="min-h-vh grid grid-cols-12 gap-5">
         <div className="col-span-12 md:col-span-5">
           <CripsCriteriaList
             criterias={criterias}
