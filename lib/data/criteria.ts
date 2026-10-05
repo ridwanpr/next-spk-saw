@@ -1,15 +1,22 @@
 import { db } from "../db/db"
-import { requireActiveProject } from "./project"
-import { requireAuth } from "./session"
 
-export const getProjectCriteria = async () => {
-  const session = await requireAuth()
-  const activeProject = await requireActiveProject(session.userId)
-
+export const getProjectCriteria = async (projectId: number) => {
   return await db
     .selectFrom("criteria")
     .selectAll()
-    .where("project_id", "=", Number(activeProject.id))
+    .where("project_id", "=", projectId)
     .orderBy("created_at", "desc")
     .execute()
+}
+
+export const getCriteriaById = async (
+  criteriaId: number,
+  projectId: number
+) => {
+  return await db
+    .selectFrom("criteria")
+    .selectAll()
+    .where("id", "=", criteriaId)
+    .where("project_id", "=", projectId)
+    .executeTakeFirstOrThrow()
 }

@@ -1,53 +1,87 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
-import { requireActiveProject } from "../data/project"
-import { requireAuth } from "../data/session"
+import { getCriteriaById } from "../data/criteria"
 import { db } from "../db/db"
 import { CripsInput, cripsSchema } from "../validations/crips"
+import { projectAction } from "./action-client"
 
-export const createOrUpdateCrips = async (
-  input: CripsInput,
-  criteriaId: number
-) => {
-  const session = await requireAuth()
-  const activeProject = await requireActiveProject(session.userId)
-
-  const validation = cripsSchema.safeParse(input)
-  if (!validation.success) {
-    return {
-      success: false,
-      error: validation.error.issues[0]?.message || "Input tidak valid",
+export const createOrUpdateCrips = projectAction(
+  async (
+    { activeProject },
+    input: CripsInput,
+    criteriaId: number,
+    cripsId: number | null = null
+  ) => {
+    const validation = cripsSchema.safeParse(input)
+    if (!validation.success) {
+      return {
+        success: false,
+        error: validation.error.issues[0]?.message || "Input tidak valid",
+      }
     }
-  }
 
-  await db
-    .selectFrom("criteria")
-    .selectAll()
-    .where("id", "=", criteriaId)
-    .where("project_id", "=", activeProject.id)
-    .executeTakeFirstOrThrow()
+    // Ensures criteria exists and belongs to the current user's active project
+    await getCriteriaById(criteriaId, activeProject.id)
 
-  const { label, value } = input
+    const { label, value } = input
 
-  const newCrips = await db
-    .insertInto("crips")
-    .values({
-      criteria_id: criteriaId,
-      label,
-      value: Number(value),
-    })
-    .returningAll()
-    .executeTakeFirst()
+    if (cripsId) {
+      await db
+        .updateTable("crips")
+        .set({
+          label,
+          value: Number(value),
+        })
+        .where("id", "=", cripsId)
+        .where("criteria_id", "=", criteriaId)
+        .execute()
+    } else {
+      const newCrips = await db
+        .insertInto("crips")
+        .values({
+          criteria_id: criteriaId,
+          label,
+          value: Number(value),
+        })
+        .returningAll()
+        .executeTakeFirst()
 
-  if (!newCrips) {
-    return {
-      success: false,
-      error: "Gagal membuat skala nilai baru",
+      if (!newCrips) {
+        return {
+          success: false,
+          error: "Gagal membuat skala nilai baru",
+        }
+      }
     }
-  }
 
-  revalidatePath("/dashboard")
-  revalidatePath("/crips")
-  return { success: true }
-}
+    revalidatePath("/dashboard")
+    revalidatePath("/crips")
+    return { success: true }
+  }
+)
+
+export const deleteCrips = projectAction(
+  async ({ activeProject }, cripsId: number) => {
+    const crips = await db
+      .selectFrom("crips")
+      .innerJoin("criteria", "criteria.id", "crips.criteria_id")
+      .select(["crips.id as id", "criteria.project_id as projectId"])
+      .where("crips.id", "=", cripsId)
+      .where("criteria.project_id", "=", activeProject.id)
+      .executeTakeFirst()
+
+    if (!crips) {
+      return {
+        success: false,
+        error: "Skala nilai tidak ditemukan",
+      }
+    }
+
+    await db.deleteFrom("crips").where("id", "=", cripsId).execute()
+
+    revalidatePath("/dashboard")
+    revalidatePath("/crips")
+    return { success: true }
+  }
+)

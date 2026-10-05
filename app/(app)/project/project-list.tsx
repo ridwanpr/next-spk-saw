@@ -1,3 +1,4 @@
+"use client"
 import { ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -9,18 +10,16 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { requireAuth } from "@/lib/data/session"
-import { getProjects, getActiveProject } from "@/lib/data/project"
+import type { Project } from "@/lib/data/project"
 import { setActiveProject } from "@/lib/actions/project-actions"
 import { ProjectCardActions } from "./project-card-actions"
 
-export async function ProjectList() {
-  const session = await requireAuth()
-  const [projects, activeProject] = await Promise.all([
-    getProjects(session.userId),
-    getActiveProject(session.userId),
-  ])
+interface ProjectListProps {
+  projects: Project[]
+  activeProject?: Project
+}
 
+export function ProjectList({ projects, activeProject }: ProjectListProps) {
   if (projects.length === 0) {
     return (
       <div className="flex min-h-60 flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
@@ -77,7 +76,6 @@ export async function ProjectList() {
 
               <form
                 action={async () => {
-                  "use server"
                   await setActiveProject(project.id, "/dashboard")
                 }}
               >

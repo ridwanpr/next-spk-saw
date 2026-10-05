@@ -1,7 +1,8 @@
 import { cookies } from "next/headers"
-import { db } from "@/lib/db/db"
 import { redirect } from "next/navigation"
+import { db } from "@/lib/db/db"
 
+// Pure queries
 export async function getProjects(userId: number) {
   return await db
     .selectFrom("projects")
@@ -11,24 +12,25 @@ export async function getProjects(userId: number) {
     .execute()
 }
 
-// only get the active project data
+export async function getProjectById(projectId: number, userId: number) {
+  return await db
+    .selectFrom("projects")
+    .selectAll()
+    .where("id", "=", projectId)
+    .where("user_id", "=", userId)
+    .executeTakeFirst()
+}
+
+// Gatekeepers & Session resolution
 export async function getActiveProject(userId: number) {
   const cookieStore = await cookies()
   const activeId = cookieStore.get("active_project_id")?.value
 
   if (!activeId) return undefined
 
-  const project = await db
-    .selectFrom("projects")
-    .selectAll()
-    .where("id", "=", Number(activeId))
-    .where("user_id", "=", userId)
-    .executeTakeFirst()
-
-  return project
+  return await getProjectById(Number(activeId), userId)
 }
 
-// always use this for feature that always need active project and trigger fail-fast
 export async function requireActiveProject(userId: number) {
   const project = await getActiveProject(userId)
 
@@ -43,12 +45,7 @@ export async function requireActiveProject(userId: number) {
 }
 
 export const verifyProjectOwner = async (userId: number, projectId: number) => {
-  const project = await db
-    .selectFrom("projects")
-    .selectAll()
-    .where("id", "=", projectId)
-    .where("user_id", "=", userId)
-    .executeTakeFirst()
+  const project = await getProjectById(projectId, userId)
 
   if (!project) {
     const message = encodeURIComponent(

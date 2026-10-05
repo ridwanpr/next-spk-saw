@@ -3,7 +3,6 @@
 import { useState, useTransition } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -12,61 +11,82 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
-import { createProject } from "@/lib/actions/project-actions"
+import { updateProject } from "@/lib/actions/project-actions"
 import { projectSchema, type ProjectInput } from "@/lib/validations/project"
 import { ProjectFormFields } from "./project-form-fields"
 
-export function CreateProjectDialog() {
-  const [open, setOpen] = useState(false)
+interface ProjectEditDialogProps {
+  project: {
+    id: number
+    name: string
+    description: string
+  } | null
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}
+
+export function ProjectEditDialog({
+  project,
+  open,
+  onOpenChange,
+}: ProjectEditDialogProps) {
+  if (!project) return null
+
+  return (
+    <ProjectEditDialogContent
+      key={project.id}
+      project={project}
+      open={open}
+      onOpenChange={onOpenChange}
+    />
+  )
+}
+
+function ProjectEditDialogContent({
+  project,
+  open,
+  onOpenChange,
+}: {
+  project: {
+    id: number
+    name: string
+    description: string
+  }
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}) {
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
 
   const form = useForm<ProjectInput>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
-      name: "",
-      description: "",
+      name: project.name,
+      description: project.description,
     },
   })
 
   const handleSubmit = (data: ProjectInput) => {
     setError(null)
     startTransition(async () => {
-      const res = await createProject(data)
+      const res = await updateProject(project.id, data)
       if (!res.success) {
-        setError(res.error || "Gagal membuat proyek baru")
+        setError(res.error || "Gagal memperbarui proyek")
         return
       }
-      form.reset()
-      setOpen(false)
+      onOpenChange(false)
     })
   }
 
-  const handleOpenChange = (isOpen: boolean) => {
-    setOpen(isOpen)
-    if (!isOpen) {
-      setError(null)
-      form.reset()
-    }
-  }
-
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <Button className="gap-2">
-          <Plus className="size-4" />
-          Proyek Baru
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <DialogHeader>
-            <DialogTitle>Buat Proyek Baru</DialogTitle>
+            <DialogTitle>Ubah Proyek</DialogTitle>
             <DialogDescription>
-              Tambahkan proyek baru untuk memulai evaluasi dan kalkulasi SPK
-              metode SAW.
+              Perbarui nama dan deskripsi untuk proyek ini.
             </DialogDescription>
           </DialogHeader>
 
@@ -77,7 +97,7 @@ export function CreateProjectDialog() {
           <div className="mt-4">
             <ProjectFormFields
               control={form.control}
-              idPrefix="create-project"
+              idPrefix={`edit-project-${project.id}`}
             />
           </div>
 
@@ -85,13 +105,13 @@ export function CreateProjectDialog() {
             <Button
               type="button"
               variant="outline"
-              onClick={() => handleOpenChange(false)}
+              onClick={() => onOpenChange(false)}
               disabled={isPending}
             >
               Batal
             </Button>
             <Button type="submit" disabled={isPending}>
-              {isPending ? "Menyimpan..." : "Buat Proyek"}
+              {isPending ? "Menyimpan..." : "Simpan Perubahan"}
             </Button>
           </DialogFooter>
         </form>
@@ -100,4 +120,4 @@ export function CreateProjectDialog() {
   )
 }
 
-export default CreateProjectDialog
+export default ProjectEditDialog

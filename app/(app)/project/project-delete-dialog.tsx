@@ -1,8 +1,6 @@
 "use client"
 
 import { useState, useTransition } from "react"
-import type { Selectable } from "kysely"
-import type { Criteria } from "@/lib/db/db-types"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -12,30 +10,33 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { deleteCriteria } from "@/lib/actions/criteria-actions"
+import { deleteProject } from "@/lib/actions/project-actions"
 
-interface CriteriaDeleteDialogProps {
-  criteria: Selectable<Criteria> | null
+interface ProjectDeleteDialogProps {
+  project: {
+    id: number
+    name: string
+  } | null
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export function CriteriaDeleteDialog({
-  criteria,
+export function ProjectDeleteDialog({
+  project,
   open,
   onOpenChange,
-}: CriteriaDeleteDialogProps) {
+}: ProjectDeleteDialogProps) {
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
 
-  if (!criteria) return null
+  if (!project) return null
 
   const handleDelete = () => {
     setError(null)
     startTransition(async () => {
-      const res = await deleteCriteria(criteria.id)
+      const res = await deleteProject(project.id)
       if (!res.success) {
-        setError("Gagal menghapus kriteria")
+        setError("Gagal menghapus proyek")
         return
       }
       onOpenChange(false)
@@ -46,14 +47,14 @@ export function CriteriaDeleteDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Hapus Kriteria?</DialogTitle>
+          <DialogTitle>Hapus Proyek?</DialogTitle>
           <DialogDescription className="pt-2 text-foreground">
-            Apakah Anda yakin ingin menghapus kriteria{" "}
+            Apakah Anda yakin ingin menghapus proyek{" "}
             <span className="font-semibold text-foreground">
-              &ldquo;{criteria.code} - {criteria.name}&rdquo;
+              &ldquo;{project.name}&rdquo;
             </span>
-            ? Tindakan ini bersifat permanen dan akan menghapus semua skala
-            nilai yang terkait.
+            ? Tindakan ini bersifat permanen dan akan menghapus semua kriteria
+            serta alternatif di dalamnya.
           </DialogDescription>
         </DialogHeader>
 
@@ -76,7 +77,7 @@ export function CriteriaDeleteDialog({
             onClick={handleDelete}
             disabled={isPending}
           >
-            {isPending ? "Menghapus..." : "Ya, Hapus"}
+            {isPending ? "Menghapus..." : "Ya, Hapus Proyek"}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -84,4 +85,4 @@ export function CriteriaDeleteDialog({
   )
 }
 
-export default CriteriaDeleteDialog
+export default ProjectDeleteDialog

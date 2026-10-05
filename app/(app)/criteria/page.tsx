@@ -1,9 +1,14 @@
-import { Suspense } from "react"
-import CriteriaList from "./criteria-list"
-import CriteriaListSkeleton from "./criteria-list-skeleton"
-import CriteriaCreate from "./criteria-create"
+import { requireAuth } from "@/lib/data/session"
+import { requireActiveProject } from "@/lib/data/project"
+import { getProjectCriteria } from "@/lib/data/criteria"
+import { CriteriaList } from "./criteria-list"
+import { CriteriaCreateCard } from "./criteria-create-card"
 
 const Criteria = async () => {
+  const session = await requireAuth()
+  const activeProject = await requireActiveProject(session.userId)
+  const criterias = await getProjectCriteria(activeProject.id)
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center">
@@ -17,12 +22,10 @@ const Criteria = async () => {
 
       <div className="min-h-vh grid grid-cols-12 gap-6">
         <div className="col-span-12 md:col-span-6">
-          <Suspense fallback={<CriteriaListSkeleton />}>
-            <CriteriaList />
-          </Suspense>
+          <CriteriaList criterias={criterias} />
         </div>
         <div className="col-span-12 md:col-span-6">
-          <CriteriaCreate />
+          <CriteriaCreateCard />
         </div>
       </div>
     </div>

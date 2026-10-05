@@ -1,6 +1,7 @@
 "use server"
 
 import { db } from "@/lib/db/db"
+import { getUserByEmail } from "@/lib/data/session"
 import {
   registerSchema,
   loginSchema,
@@ -32,11 +33,7 @@ export async function registerUser(
   const { name, email, password } = validation.data
   const normalizedEmail = email.toLowerCase().trim()
 
-  const existingUser = await db
-    .selectFrom("users")
-    .select("id")
-    .where("email", "=", normalizedEmail)
-    .executeTakeFirst()
+  const existingUser = await getUserByEmail(normalizedEmail)
 
   if (existingUser) {
     return {
@@ -74,11 +71,7 @@ export async function loginUser(
   const { email, password } = validation.data
   const normalizedEmail = email.toLowerCase().trim()
 
-  const user = await db
-    .selectFrom("users")
-    .selectAll()
-    .where("email", "=", normalizedEmail)
-    .executeTakeFirst()
+  const user = await getUserByEmail(normalizedEmail)
 
   if (!user) {
     return {

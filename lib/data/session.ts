@@ -28,3 +28,11 @@ export async function requireAuth() {
 
   return session
 }
+
+export async function getUserByEmail(email: string) {
+  return await db
+    .selectFrom("users")
+    .selectAll()
+    .where("email", "=", email)
+    .executeTakeFirst()
+}

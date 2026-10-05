@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useState } from "react"
 import { MoreVertical } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -9,18 +9,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Field, FieldLabel } from "@/components/ui/field"
-import { updateProject, deleteProject } from "@/lib/actions/project-actions"
+import { ProjectEditDialog } from "./project-edit-dialog"
+import { ProjectDeleteDialog } from "./project-delete-dialog"
 
 interface ProjectCardActionsProps {
   project: {
@@ -30,41 +20,9 @@ interface ProjectCardActionsProps {
   }
 }
 
-export const ProjectCardActions = ({ project }: ProjectCardActionsProps) => {
+export function ProjectCardActions({ project }: ProjectCardActionsProps) {
   const [openEdit, setOpenEdit] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
-  const [isPending, startTransition] = useTransition()
-
-  const [name, setName] = useState(project.name)
-  const [description, setDescription] = useState(project.description)
-  const [error, setError] = useState<string | null>(null)
-
-  const handleUpdate = (e: React.SubmitEvent) => {
-    e.preventDefault()
-    setError(null)
-
-    startTransition(async () => {
-      const res = await updateProject(project.id, { name, description })
-      if (!res.success) {
-        setError(res.error || "Gagal memperbarui proyek")
-        return
-      }
-      setOpenEdit(false)
-    })
-  }
-
-  const handleDelete = () => {
-    setError(null)
-
-    startTransition(async () => {
-      const res = await deleteProject(project.id)
-      if (!res.success) {
-        setError("Gagal menghapus proyek")
-        return
-      }
-      setOpenDelete(false)
-    })
-  }
 
   return (
     <>
@@ -88,102 +46,19 @@ export const ProjectCardActions = ({ project }: ProjectCardActionsProps) => {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Edit Dialog */}
-      <Dialog open={openEdit} onOpenChange={setOpenEdit}>
-        <DialogContent>
-          <form onSubmit={handleUpdate} className="flex flex-col gap-4">
-            <DialogHeader>
-              <DialogTitle>Ubah Proyek</DialogTitle>
-              <DialogDescription>
-                Perbarui nama dan deskripsi untuk proyek ini.
-              </DialogDescription>
-            </DialogHeader>
+      <ProjectEditDialog
+        project={project}
+        open={openEdit}
+        onOpenChange={setOpenEdit}
+      />
 
-            {error && (
-              <p className="text-sm font-medium text-destructive">{error}</p>
-            )}
-
-            <Field>
-              <FieldLabel htmlFor={`name-${project.id}`}>
-                Nama Proyek
-              </FieldLabel>
-              <Input
-                id={`name-${project.id}`}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Nama proyek"
-                required
-              />
-            </Field>
-
-            <Field>
-              <FieldLabel htmlFor={`desc-${project.id}`}>Deskripsi</FieldLabel>
-              <Textarea
-                id={`desc-${project.id}`}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Deskripsi singkat proyek"
-                rows={3}
-                required
-              />
-            </Field>
-
-            <DialogFooter className="mt-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setOpenEdit(false)}
-                disabled={isPending}
-              >
-                Batal
-              </Button>
-              <Button type="submit" disabled={isPending}>
-                {isPending ? "Menyimpan..." : "Simpan Perubahan"}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-
-      {/* Delete Confirmation Dialog */}
-      <Dialog open={openDelete} onOpenChange={setOpenDelete}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Hapus Proyek?</DialogTitle>
-            <DialogDescription>
-              Apakah Anda yakin ingin menghapus proyek{" "}
-              <span className="font-semibold text-foreground">
-                &ldquo;{project.name}&rdquo;
-              </span>
-              ? Tindakan ini permanen dan akan menghapus semua kriteria serta
-              alternatif di dalamnya.
-            </DialogDescription>
-          </DialogHeader>
-
-          {error && (
-            <p className="text-sm font-medium text-destructive">{error}</p>
-          )}
-
-          <DialogFooter className="mt-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setOpenDelete(false)}
-              disabled={isPending}
-            >
-              Batal
-            </Button>
-            <Button
-              type="button"
-              variant="destructive"
-              onClick={handleDelete}
-              disabled={isPending}
-            >
-              {isPending ? "Menghapus..." : "Ya, Hapus Proyek"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ProjectDeleteDialog
+        project={project}
+        open={openDelete}
+        onOpenChange={setOpenDelete}
+      />
     </>
   )
 }
+
+export default ProjectCardActions

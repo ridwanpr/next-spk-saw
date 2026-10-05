@@ -1,7 +1,7 @@
-import { Suspense } from "react"
+import { requireAuth } from "@/lib/data/session"
+import { getProjects, getActiveProject } from "@/lib/data/project"
 import { CreateProjectDialog } from "./create-project-dialog"
 import { ProjectList } from "./project-list"
-import { ProjectListSkeleton } from "./project-list-skeleton"
 
 interface ProjectProps {
   searchParams: Promise<{ error?: string }>
@@ -9,6 +9,11 @@ interface ProjectProps {
 
 const Project = async ({ searchParams }: ProjectProps) => {
   const { error } = await searchParams
+  const session = await requireAuth()
+  const [projects, activeProject] = await Promise.all([
+    getProjects(session.userId),
+    getActiveProject(session.userId),
+  ])
 
   return (
     <div className="flex flex-col gap-6">
@@ -31,9 +36,7 @@ const Project = async ({ searchParams }: ProjectProps) => {
         <CreateProjectDialog />
       </div>
 
-      <Suspense fallback={<ProjectListSkeleton />}>
-        <ProjectList />
-      </Suspense>
+      <ProjectList projects={projects} activeProject={activeProject} />
     </div>
   )
 }
