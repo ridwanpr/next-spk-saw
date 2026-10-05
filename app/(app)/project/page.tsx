@@ -1,6 +1,6 @@
 import { requireAuth } from "@/lib/data/session"
 import { getProjects, getActiveProject } from "@/lib/data/project"
-import { CreateProjectDialog } from "./create-project-dialog"
+import { CreateProjectDialog } from "./project-create-dialog"
 import { ProjectList } from "./project-list"
 
 interface ProjectProps {
