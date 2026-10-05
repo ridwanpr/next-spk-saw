@@ -19,28 +19,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { createOrUpdateCrips } from "@/lib/actions/crips-actions"
 
 interface CripsCreateProps {
-  selectedCriteria?: Selectable<Criteria>
+  selectedCriteria: Selectable<Criteria>
   criteriaCrips: Selectable<Crips>[]
 }
 
 const CripsCreate = ({ selectedCriteria, criteriaCrips }: CripsCreateProps) => {
   const form = useForm<z.infer<typeof cripsSchema>>({
     resolver: zodResolver(cripsSchema),
-    values: {
+    defaultValues: {
       label: "",
       value: "1",
     },
   })
 
+  const onSubmit = async (data: z.infer<typeof cripsSchema>) => {
+    const res = await createOrUpdateCrips(data, selectedCriteria.id)
+    if (res.success) {
+      form.reset()
+    }
+  }
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>
-          {selectedCriteria
-            ? `Skala Nilai: ${selectedCriteria.code} - ${selectedCriteria.name}`
-            : "Pilih Kriteria Terlebih Dahulu"}
+          {`Skala Nilai: ${selectedCriteria.code} - ${selectedCriteria.name}`}
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
@@ -93,7 +99,7 @@ const CripsCreate = ({ selectedCriteria, criteriaCrips }: CripsCreateProps) => {
           <p className="mb-4 font-heading text-base font-medium">
             Tambah / Ubah Skala
           </p>
-          <form>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup className="flex flex-col lg:flex-row">
               <Controller
                 name="label"
@@ -124,7 +130,7 @@ const CripsCreate = ({ selectedCriteria, criteriaCrips }: CripsCreateProps) => {
                         id="value"
                         aria-invalid={fieldState.invalid}
                       >
-                        <SelectValue>Skala Nilai 1-5</SelectValue>
+                        <SelectValue placeholder="Skala Nilai 1-5" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
