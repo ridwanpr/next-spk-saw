@@ -53,7 +53,7 @@ const CriteriaClientView = ({ criterias }: CriteriaClientViewProps) => {
             criterias.map((criteria) => (
               <div
                 key={criteria.id}
-                className="flex justify-between border-t border-accent p-4"
+                className="flex items-center justify-between border-t border-accent p-4 transition-colors hover:bg-muted/40"
               >
                 <div className="flex items-center gap-4">
                   <div className="flex size-9 flex-col items-center justify-center rounded-lg bg-accent">
@@ -68,31 +68,37 @@ const CriteriaClientView = ({ criterias }: CriteriaClientViewProps) => {
                     </span>
                   </div>
                 </div>
+
                 <div className="flex items-center gap-2">
                   <p className="mr-2 font-semibold">{criteria.weight}%</p>
-                  <Button
-                    onClick={() => handleEdit(criteria)}
-                    variant="secondary"
-                    size="icon"
-                  >
-                    <Pencil className="size-4" />
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      setIsDeleteOpen(true)
-                      setCriteriaToDelete(criteria.id)
-                    }}
-                    variant="destructive"
-                    size="icon"
-                  >
-                    <Trash2 className="size-4" />
-                  </Button>
+                  <div className="flex items-center gap-1">
+                    <Button
+                      onClick={() => handleEdit(criteria)}
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                    >
+                      <Pencil className="size-4" />
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setIsDeleteOpen(true)
+                        setCriteriaToDelete(criteria.id)
+                      }}
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                    >
+                      <Trash2 className="size-4" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             ))
           )}
         </CardContent>
       </Card>
+
       {criteriaEdited && (
         <CriteriaEditDialog
           key={criteriaEdited.id}
@@ -101,6 +107,7 @@ const CriteriaClientView = ({ criterias }: CriteriaClientViewProps) => {
           criteriaEdited={criteriaEdited}
         />
       )}
+
       {criteriaToDelete && (
         <CriteriaDeleteDialog
           isDeleteOpen={isDeleteOpen}

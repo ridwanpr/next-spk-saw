@@ -16,12 +16,12 @@ const Criteria = async () => {
       </div>
 
       <div className="min-h-vh grid grid-cols-12 gap-6">
-        <div className="col-span-12 md:col-span-7">
+        <div className="col-span-12 md:col-span-6">
           <Suspense fallback={<CriteriaListSkeleton />}>
             <CriteriaList />
           </Suspense>
         </div>
-        <div className="col-span-12 md:col-span-5">
+        <div className="col-span-12 md:col-span-6">
           <CriteriaCreate />
         </div>
       </div>

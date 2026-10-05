@@ -2,7 +2,7 @@
 
 import { Selectable } from "kysely"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Criteria } from "@/lib/db/db-types"
+import { Crips, Criteria } from "@/lib/db/db-types"
 import { Button } from "@/components/ui/button"
 import { Pencil, Trash2 } from "lucide-react"
 import { Input } from "@/components/ui/input"
@@ -22,9 +22,10 @@ import {
 
 interface CripsCreateProps {
   selectedCriteria?: Selectable<Criteria>
+  criteriaCrips: Selectable<Crips>[]
 }
 
-const CripsCreate = ({ selectedCriteria }: CripsCreateProps) => {
+const CripsCreate = ({ selectedCriteria, criteriaCrips }: CripsCreateProps) => {
   const form = useForm<z.infer<typeof cripsSchema>>({
     resolver: zodResolver(cripsSchema),
     values: {
@@ -43,32 +44,57 @@ const CripsCreate = ({ selectedCriteria }: CripsCreateProps) => {
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="flex items-center justify-between gap-4 border-t border-border px-6 py-4">
-          <div className="flex items-center gap-4">
-            <div className="flex flex-col items-center justify-center rounded bg-accent p-2">
-              <span className="w-8 text-center">1</span>
-            </div>
-            <div>Nilai 1</div>
-            <div>
-              <p>{"<="} 2km</p>
-            </div>
+        {criteriaCrips.length == 0 && (
+          <div className="flex items-center justify-between gap-4 border-t border-border px-6 py-4">
+            Tidak ada data, tambahkan terlebih dahulu pada input dibawah
           </div>
-          <div>
-            <Button variant="ghost" size="sm">
-              <Pencil />
-            </Button>
-            <Button variant="ghost" size="sm">
-              <Trash2 />
-            </Button>
-          </div>
-        </div>
+        )}
+
+        {criteriaCrips.length > 0 &&
+          criteriaCrips.map((crips, i) => (
+            <div
+              key={crips.id}
+              className="flex items-center justify-between gap-4 border-t border-border px-6 py-3.5 transition-colors hover:bg-muted/40"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted text-xs font-medium text-muted-foreground">
+                  {i + 1}
+                </div>
+                <p className="text-sm font-medium text-foreground">
+                  {crips.label}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <span className="inline-flex items-center rounded-md bg-secondary px-2.5 py-1 text-xs font-medium text-secondary-foreground">
+                  Nilai: {crips.value}
+                </span>
+                <div className="flex items-center gap-1">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ))}
 
         <div className="border-t px-6 pt-4">
           <p className="mb-4 font-heading text-base font-medium">
             Tambah / Ubah Skala
           </p>
           <form>
-            <FieldGroup className="flex flex-row">
+            <FieldGroup className="flex flex-col lg:flex-row">
               <Controller
                 name="label"
                 control={form.control}

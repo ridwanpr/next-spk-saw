@@ -42,4 +42,22 @@ export async function requireActiveProject(userId: number) {
   return project
 }
 
+export const verifyProjectOwner = async (userId: number, projectId: number) => {
+  const project = await db
+    .selectFrom("projects")
+    .selectAll()
+    .where("id", "=", projectId)
+    .where("user_id", "=", userId)
+    .executeTakeFirst()
+
+  if (!project) {
+    const message = encodeURIComponent(
+      "You are not allowed to see this resources"
+    )
+    redirect(`/project?error=${message}`)
+  }
+
+  return project
+}
+
 export type Project = Awaited<ReturnType<typeof getProjects>>[number]
