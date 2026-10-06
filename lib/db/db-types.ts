@@ -3,94 +3,95 @@
  * Please do not edit it manually.
  */
 
-import type { ColumnType } from "kysely"
+import type { ColumnType } from "kysely";
 
-export type CriteriaAttributeType = "benefit" | "cost"
+export type CriteriaAttributeType = "benefit" | "cost";
 
-export type Generated<T> =
-  T extends ColumnType<infer S, infer I, infer U>
-    ? ColumnType<S, I | undefined, U>
-    : ColumnType<T, T | undefined, T>
+export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
+  ? ColumnType<S, I | undefined, U>
+  : ColumnType<T, T | undefined, T>;
 
-export type Numeric = ColumnType<string, number | string, number | string>
+export type Numeric = ColumnType<string, number | string, number | string>;
 
-export type Timestamp = ColumnType<Date, Date | string, Date | string>
+export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
 export interface Alternatives {
-  code: string
-  created_at: Generated<Timestamp>
-  id: Generated<number>
-  name: string
-  project_id: number
-  updated_at: Generated<Timestamp>
+  code: string;
+  created_at: Generated<Timestamp>;
+  id: Generated<number>;
+  name: string;
+  project_id: number;
+  updated_at: Generated<Timestamp>;
 }
 
 export interface AlternativeValue {
-  alternative_id: number
-  created_at: Generated<Timestamp>
-  crips_id: number
-  criteria_id: number
-  id: Generated<number>
-  numerical_value: Numeric
-  updated_at: Generated<Timestamp>
+  alternative_id: number;
+  created_at: Generated<Timestamp>;
+  crips_id: number;
+  criteria_id: number;
+  id: Generated<number>;
+  numerical_value: Numeric;
+  updated_at: Generated<Timestamp>;
 }
 
 export interface Crips {
-  created_at: Generated<Timestamp>
-  criteria_id: number
-  id: Generated<number>
-  label: string
-  updated_at: Generated<Timestamp>
-  value: number
+  created_at: Generated<Timestamp>;
+  criteria_id: number;
+  id: Generated<number>;
+  label: string;
+  max_value: Generated<Numeric>;
+  min_value: Generated<Numeric>;
+  updated_at: Generated<Timestamp>;
+  value: number;
 }
 
 export interface Criteria {
-  attribute_type: CriteriaAttributeType
-  code: string
-  created_at: Generated<Timestamp>
-  id: Generated<number>
-  name: string
-  project_id: number
-  updated_at: Generated<Timestamp>
-  weight: Numeric
+  attribute_type: CriteriaAttributeType;
+  code: string;
+  created_at: Generated<Timestamp>;
+  id: Generated<number>;
+  name: string;
+  project_id: number;
+  updated_at: Generated<Timestamp>;
+  weight: Numeric;
 }
 
 export interface Projects {
-  created_at: Generated<Timestamp>
-  description: string
-  id: Generated<number>
-  name: string
-  slug: string
-  updated_at: Generated<Timestamp>
-  user_id: number
+  created_at: Generated<Timestamp>;
+  description: string;
+  id: Generated<number>;
+  name: string;
+  slug: string;
+  updated_at: Generated<Timestamp>;
+  user_id: number;
 }
 
 export interface Sessions {
-  created_at: Generated<Timestamp>
-  expired_at: Timestamp
-  id: Generated<number>
-  ip_address: string | null
-  token: string
-  updated_at: Generated<Timestamp>
-  user_agent: string | null
-  user_id: number
+  created_at: Generated<Timestamp>;
+  expired_at: Timestamp;
+  id: Generated<number>;
+  ip_address: string | null;
+  token: string;
+  updated_at: Generated<Timestamp>;
+  user_agent: string | null;
+  user_id: number;
 }
 
 export interface Users {
-  created_at: Generated<Timestamp>
-  email: string
-  id: Generated<number>
-  name: string
-  password: string
-  updated_at: Generated<Timestamp>
+  created_at: Generated<Timestamp>;
+  email: string;
+  id: Generated<number>;
+  name: string;
+  password: string;
+  updated_at: Generated<Timestamp>;
 }
 
 export interface DB {
-  alternative_value: AlternativeValue
-  alternatives: Alternatives
-  crips: Crips
-  criteria: Criteria
-  projects: Projects
-  sessions: Sessions
-  users: Users
+  alternative_value: AlternativeValue;
+  alternatives: Alternatives;
+  crips: Crips;
+  criteria: Criteria;
+  projects: Projects;
+  sessions: Sessions;
+  users: Users;
 }
