@@ -57,7 +57,7 @@ const dataPreparationMenu = [
   },
   {
     title: "Data Alternatif",
-    url: "/alternatif",
+    url: "/alternative",
     icon: Shapes,
   },
   {

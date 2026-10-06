@@ -2,7 +2,6 @@ import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import { db } from "@/lib/db/db"
 
-// Pure queries
 export async function getProjects(userId: number) {
   return await db
     .selectFrom("projects")
@@ -21,7 +20,6 @@ export async function getProjectById(projectId: number, userId: number) {
     .executeTakeFirst()
 }
 
-// Gatekeepers & Session resolution
 export async function getActiveProject(userId: number) {
   const cookieStore = await cookies()
   const activeId = cookieStore.get("active_project_id")?.value
