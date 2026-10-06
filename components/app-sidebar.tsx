@@ -9,7 +9,6 @@ import {
   LogOut,
   Ruler,
   Scale,
-  Shapes,
   Trophy,
   User,
 } from "lucide-react"
@@ -56,13 +55,8 @@ const dataPreparationMenu = [
     icon: Ruler,
   },
   {
-    title: "Data Alternatif",
+    title: "Kelola Alternatif",
     url: "/alternative",
-    icon: Shapes,
-  },
-  {
-    title: "Input Nilai Alternatif",
-    url: "/nilai-alternatif",
     icon: ClipboardPen,
   },
 ]
