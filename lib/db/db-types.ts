@@ -39,8 +39,6 @@ export interface Crips {
   criteria_id: number;
   id: Generated<number>;
   label: string;
-  max_value: Generated<Numeric>;
-  min_value: Generated<Numeric>;
   updated_at: Generated<Timestamp>;
   value: number;
 }
