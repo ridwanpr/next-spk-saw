@@ -7,9 +7,13 @@ import type { ColumnType } from "kysely";
 
 export type CriteriaAttributeType = "benefit" | "cost";
 
+export type CriteriaEvalType = "exact" | "range";
+
 export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   ? ColumnType<S, I | undefined, U>
   : ColumnType<T, T | undefined, T>;
+
+export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>;
 
 export type Numeric = ColumnType<string, number | string, number | string>;
 
@@ -39,6 +43,8 @@ export interface Crips {
   criteria_id: number;
   id: Generated<number>;
   label: string;
+  max_value: Int8 | null;
+  min_value: Int8 | null;
   updated_at: Generated<Timestamp>;
   value: number;
 }
@@ -47,6 +53,7 @@ export interface Criteria {
   attribute_type: CriteriaAttributeType;
   code: string;
   created_at: Generated<Timestamp>;
+  eval_type: CriteriaEvalType | null;
   id: Generated<number>;
   name: string;
   project_id: number;
