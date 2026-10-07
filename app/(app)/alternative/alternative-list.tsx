@@ -17,7 +17,7 @@ const AlternativeList = () => {
               <TableHead>No</TableHead>
               <TableHead>Kode</TableHead>
               <TableHead>Nama</TableHead>
-              <TableHead>Status Penilaian</TableHead>
+              <TableHead>Status Input</TableHead>
               <TableHead>Aksi</TableHead>
             </TableRow>
           </TableHeader>

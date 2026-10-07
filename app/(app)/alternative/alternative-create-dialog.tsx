@@ -12,6 +12,14 @@ import {
 } from "@/components/ui/dialog"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { ProjectCriteria } from "@/lib/data/criteria"
 import { Plus } from "lucide-react"
 
@@ -39,7 +47,7 @@ const AlternativeCreateDialog = ({
         </DialogHeader>
 
         <form className="mt-2 space-y-6">
-          {/* Identitas Alternatif Header */}
+          {/* Identitas Alternatif */}
           <div className="grid grid-cols-12 gap-4 rounded-xl border border-border/40 bg-muted/20 p-4">
             <div className="col-span-3">
               <Field>
@@ -61,23 +69,58 @@ const AlternativeCreateDialog = ({
 
             <div className="max-h-[50vh] overflow-y-auto pr-2">
               <FieldGroup className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
-                {criterias.map((c) => (
-                  <Field key={c.id}>
-                    <FieldLabel
-                      htmlFor={`criteria-${c.id}`}
-                      className="truncate"
-                    >
-                      <span className="mr-1 font-mono text-muted-foreground">
-                        {c.code}:
-                      </span>
-                      {c.name}
-                    </FieldLabel>
-                    <Input
-                      id={`criteria-${c.id}`}
-                      type="number"
-                      step="any"
-                      placeholder={`Nilai ${c.name}`}
-                    />
+                {criterias.map((criteria) => (
+                  <Field key={criteria.id}>
+                    {criteria.eval_type == "range" && (
+                      <>
+                        <FieldLabel
+                          htmlFor={`criteria-${criteria.id}`}
+                          className="truncate"
+                        >
+                          <span className="mr-1 font-mono text-muted-foreground">
+                            {criteria.code}:
+                          </span>
+                          {criteria.name}
+                        </FieldLabel>
+                        <Input
+                          id={`criteria-${criteria.id}`}
+                          type="number"
+                          step="any"
+                          placeholder={`Nilai ${criteria.name}`}
+                        />
+                      </>
+                    )}
+                    {criteria.eval_type == "exact" && (
+                      <>
+                        <FieldLabel
+                          htmlFor={`criteria-${criteria.id}`}
+                          className="truncate"
+                        >
+                          <span className="mr-1 font-mono text-muted-foreground">
+                            {criteria.code}:
+                          </span>
+                          {criteria.name}
+                        </FieldLabel>
+
+                        <Select>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Pilih nilai alternatif" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              {criteria.crips.map((crip) => (
+                                <SelectItem
+                                  key={crip.id}
+                                  value={crip.value.toString()}
+                                >
+                                  {crip.label}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </>
+                    )}
                   </Field>
                 ))}
               </FieldGroup>
