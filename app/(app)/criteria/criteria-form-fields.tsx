@@ -91,6 +91,27 @@ export function CriteriaFormFields({
         )}
       />
 
+      <Controller
+        name="eval_type"
+        control={control}
+        render={({ field, fieldState }) => (
+          <Field data-invalid={fieldState.invalid}>
+            <FieldLabel htmlFor="eval_type">Tipe Evaluasi</FieldLabel>
+            <Select value={field.value} onValueChange={field.onChange}>
+              <SelectTrigger>
+                <SelectValue placeholder="Pilih tipe evaluasi (Exact/Range)" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="exact">Exact</SelectItem>
+                  <SelectItem value="range">Range</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </Field>
+        )}
+      />
+
       {/* Bobot */}
       <Controller
         name="weight"

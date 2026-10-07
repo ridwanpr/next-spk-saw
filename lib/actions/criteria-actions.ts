@@ -20,7 +20,7 @@ export const createCriteria = projectAction(
       }
     }
 
-    const { name, code, attribute_type, weight } = validation.data
+    const { name, code, attribute_type, weight, eval_type } = validation.data
 
     const newCriteria = await db
       .insertInto("criteria")
@@ -30,6 +30,7 @@ export const createCriteria = projectAction(
         code,
         attribute_type,
         weight,
+        eval_type,
       })
       .returningAll()
       .executeTakeFirst()
@@ -57,11 +58,18 @@ export const updateCriteria = projectAction(
       }
     }
 
-    const { name, code, attribute_type, weight } = validation.data
+    const { name, code, attribute_type, weight, eval_type } = validation.data
 
     await db
       .updateTable("criteria")
-      .set({ name, code, attribute_type, weight, updated_at: new Date() })
+      .set({
+        name,
+        code,
+        attribute_type,
+        weight,
+        eval_type,
+        updated_at: new Date(),
+      })
       .where("project_id", "=", activeProject.id)
       .where("id", "=", criteriaId)
       .execute()

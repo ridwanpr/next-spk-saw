@@ -62,6 +62,7 @@ function CriteriaEditDialogContent({
       code: criteria.code,
       attribute_type: criteria.attribute_type,
       weight: String(criteria.weight),
+      eval_type: criteria.eval_type ?? "exact",
     },
   })
 

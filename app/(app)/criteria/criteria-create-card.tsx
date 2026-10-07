@@ -29,6 +29,7 @@ export function CriteriaCreateCard() {
       code: "",
       attribute_type: "benefit",
       weight: "",
+      eval_type: "exact",
     },
   })
 
@@ -45,6 +46,7 @@ export function CriteriaCreateCard() {
         code: "",
         attribute_type: "benefit",
         weight: "",
+        eval_type: "exact",
       })
     })
   }
@@ -56,6 +58,7 @@ export function CriteriaCreateCard() {
       code: "",
       attribute_type: "benefit",
       weight: "",
+      eval_type: "exact",
     })
   }
 

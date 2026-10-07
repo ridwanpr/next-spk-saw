@@ -7,6 +7,9 @@ export const editCriteriaSchema = z.object({
     error: "Atribut kriteria wajib diisi",
   }),
   weight: z.string().trim().min(1, { error: "Bobot kriteria wajib diisi" }),
+  eval_type: z.enum(["range", "exact"], {
+    error: "Tipe evaluasi wajib diisi",
+  }),
 })
 
 export type CriteriaEdit = z.infer<typeof editCriteriaSchema>

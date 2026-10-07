@@ -52,6 +52,9 @@ export function CriteriaList({ criterias }: CriteriaListProps) {
                 </div>
 
                 <div className="flex items-center gap-2">
+                  <span className="mr-2 text-xs font-medium uppercase">
+                    {criteria.eval_type}
+                  </span>
                   <p className="mr-2 font-semibold tabular-nums">
                     {criteria.weight}%
                   </p>
