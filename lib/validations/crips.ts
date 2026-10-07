@@ -5,6 +5,8 @@ export const cripsSchema = z.object({
   value: z.enum(["1", "2", "3", "4", "5"], {
     error: "Skala nilai 1-5 wajib diisi",
   }),
+  min_value: z.string(),
+  max_value: z.string(),
 })
 
 export type CripsInput = z.infer<typeof cripsSchema>

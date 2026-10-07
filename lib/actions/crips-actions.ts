@@ -24,7 +24,7 @@ export const createOrUpdateCrips = projectAction(
     // Ensures criteria exists and belongs to the current user's active project
     await getCriteriaById(criteriaId, activeProject.id)
 
-    const { label, value } = input
+    const { label, value, min_value, max_value } = input
 
     if (cripsId) {
       await db
@@ -32,6 +32,8 @@ export const createOrUpdateCrips = projectAction(
         .set({
           label,
           value: Number(value),
+          min_value: Number(min_value) ?? null,
+          max_value: Number(max_value) ?? null,
         })
         .where("id", "=", cripsId)
         .where("criteria_id", "=", criteriaId)
@@ -43,6 +45,8 @@ export const createOrUpdateCrips = projectAction(
           criteria_id: criteriaId,
           label,
           value: Number(value),
+          min_value: Number(min_value) ?? null,
+          max_value: Number(max_value) ?? null,
         })
         .returningAll()
         .executeTakeFirst()

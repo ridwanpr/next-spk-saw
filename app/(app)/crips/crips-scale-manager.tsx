@@ -63,6 +63,7 @@ export function CripsScaleManager({
         <CripsScaleList
           selectedCriteria={selectedCriteria}
           criteriaCrips={criteriaCrips}
+          criteriaEvalType={selectedCriteria.eval_type!}
           selectedCripsId={editingCrips?.id ?? null}
           onEdit={handleEdit}
           onDelete={handleDelete}
@@ -72,6 +73,7 @@ export function CripsScaleManager({
         <CripsScaleForm
           key={editingCrips?.id ?? "create"}
           selectedCriteriaId={selectedCriteria.id}
+          criteriaEvalType={selectedCriteria.eval_type!}
           editingCrips={editingCrips}
           onCancelEdit={handleCancelEdit}
           onSuccess={() => setEditingCrips(null)}

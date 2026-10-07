@@ -59,6 +59,9 @@ export function CripsCriteriaSelector({
                   </div>
 
                   <div className="flex items-center gap-3">
+                    <span className="mr-2 text-xs font-medium uppercase">
+                      {criteria.eval_type}
+                    </span>
                     <p className="w-16 text-right text-sm font-semibold text-foreground tabular-nums">
                       {criteria.weight}%
                     </p>

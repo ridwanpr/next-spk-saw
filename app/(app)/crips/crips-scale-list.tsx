@@ -12,6 +12,7 @@ interface CripsScaleListProps {
   onEdit: (crips: Selectable<Crips>) => void
   onDelete: (cripsId: number) => void
   isPending: boolean
+  criteriaEvalType: "exact" | "range"
 }
 
 export function CripsScaleList({
@@ -20,6 +21,7 @@ export function CripsScaleList({
   onEdit,
   onDelete,
   isPending,
+  criteriaEvalType,
 }: CripsScaleListProps) {
   if (criteriaCrips.length === 0) {
     return (
@@ -52,6 +54,11 @@ export function CripsScaleList({
             </div>
 
             <div className="flex items-center gap-3">
+              {criteriaEvalType == "range" && (
+                <span>
+                  Range: {crips.min_value} - {crips.max_value}
+                </span>
+              )}
               <span className="inline-flex items-center rounded-md bg-secondary px-2.5 py-1 text-xs font-medium text-secondary-foreground">
                 Nilai: {crips.value}
               </span>

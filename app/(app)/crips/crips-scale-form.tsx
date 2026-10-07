@@ -26,6 +26,7 @@ import { cripsSchema, type CripsInput } from "@/lib/validations/crips"
 
 interface CripsScaleFormProps {
   selectedCriteriaId: number
+  criteriaEvalType: "exact" | "range"
   editingCrips: Selectable<Crips> | null
   onCancelEdit: () => void
   onSuccess: () => void
@@ -33,6 +34,7 @@ interface CripsScaleFormProps {
 
 export function CripsScaleForm({
   selectedCriteriaId,
+  criteriaEvalType,
   editingCrips,
   onCancelEdit,
   onSuccess,
@@ -45,6 +47,8 @@ export function CripsScaleForm({
     defaultValues: {
       label: editingCrips?.label ?? "",
       value: (editingCrips?.value.toString() as CripsInput["value"]) ?? "1",
+      min_value: editingCrips?.min_value ?? "",
+      max_value: editingCrips?.max_value ?? "",
     },
   })
 
@@ -70,7 +74,7 @@ export function CripsScaleForm({
     if (editingCrips) {
       onCancelEdit()
     } else {
-      form.reset({ label: "", value: "1" })
+      form.reset({ label: "", value: "1", min_value: "", max_value: "" })
     }
   }
 
@@ -150,6 +154,49 @@ export function CripsScaleForm({
             )}
           />
         </FieldGroup>
+
+        {criteriaEvalType == "range" && (
+          <FieldGroup className="mt-4 flex flex-col lg:flex-row">
+            <Controller
+              name="min_value"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="min_value">Nilai Minimum</FieldLabel>
+                  <Input
+                    {...field}
+                    type="text"
+                    id="min_value"
+                    aria-invalid={fieldState.invalid}
+                    autoComplete="off"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              name="max_value"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="max_value">Nilai Maksimum</FieldLabel>
+                  <Input
+                    {...field}
+                    type="text"
+                    id="max_value"
+                    aria-invalid={fieldState.invalid}
+                    autoComplete="off"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+          </FieldGroup>
+        )}
 
         <div className="mt-4 flex justify-end gap-2">
           <Button
