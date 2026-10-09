@@ -3,11 +3,13 @@ import { requireActiveProject } from "@/lib/data/project"
 import { requireAuth } from "@/lib/data/session"
 import AlternativeList from "./alternative-list"
 import AlternativeCreateDialog from "./alternative-create-dialog"
+import { getProjectAlternative } from "@/lib/data/alternative"
 
 const Alternative = async () => {
   const session = await requireAuth()
   const activeProject = await requireActiveProject(session.userId)
   const criterias = await getProjectCriteria(activeProject.id)
+  const alternatives = await getProjectAlternative(activeProject.id)
 
   if (
     !criterias ||
@@ -50,12 +52,12 @@ const Alternative = async () => {
             </p>
           </div>
           <div>
-            <AlternativeCreateDialog criterias={criterias} />
+            <AlternativeCreateDialog />
           </div>
         </div>
 
         <div>
-          <AlternativeList />
+          <AlternativeList alternatives={alternatives} />
         </div>
       </div>
     </>

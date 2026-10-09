@@ -10,125 +10,109 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
+import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { createAlternative } from "@/lib/actions/alternative-action"
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { ProjectCriteria } from "@/lib/data/criteria"
+  AlternativeCreate,
+  createAlternativeSchema,
+} from "@/lib/validations/alternative"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Plus } from "lucide-react"
+import { useState, useTransition } from "react"
+import { Controller, useForm } from "react-hook-form"
 
-interface AlternativeCreateDialogProps {
-  criterias: ProjectCriteria[]
-}
+const AlternativeCreateDialog = () => {
+  const [error, setError] = useState<string | null>(null)
+  const [open, setOpen] = useState<boolean>(false)
+  const [isPending, startTransition] = useTransition()
 
-const AlternativeCreateDialog = ({
-  criterias,
-}: AlternativeCreateDialogProps) => {
+  const form = useForm<AlternativeCreate>({
+    resolver: zodResolver(createAlternativeSchema),
+    defaultValues: {
+      code: "",
+      name: "",
+    },
+  })
+
+  const onSubmit = (input: AlternativeCreate) => {
+    setError(null)
+    startTransition(async () => {
+      const res = await createAlternative(input)
+      if (!res.success) {
+        setError(res.error || "Gagal menyimpan data")
+        return
+      }
+      form.reset({ code: "", name: "" })
+      setOpen(false)
+    })
+  }
+
+  const handleOpenChange = (isOpen: boolean) => {
+    setOpen(isOpen)
+    if (!isOpen) {
+      setError(null)
+      form.reset()
+    }
+  }
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button>
           <Plus className="mr-2 h-4 w-4" /> Alternatif Baru
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-3xl">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Tambah Alternatif Baru</DialogTitle>
           <DialogDescription>
-            Masukkan identitas alternatif dan nilai untuk setiap kriteria.
+            Masukkan identitas alternatif (kode dan nama).
           </DialogDescription>
         </DialogHeader>
 
-        <form className="mt-2 space-y-6">
-          {/* Identitas Alternatif */}
-          <div className="grid grid-cols-12 gap-4 rounded-xl border border-border/40 bg-muted/20 p-4">
-            <div className="col-span-3">
-              <Field>
+        {error && (
+          <p className="text-sm font-medium text-destructive">{error}</p>
+        )}
+
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <Controller
+            name="code"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor="code">Kode (Ai)</FieldLabel>
-                <Input id="code" placeholder="E.g. A1" />
+                <Input {...field} id="code" placeholder="E.g. A1" />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
               </Field>
-            </div>
-            <div className="col-span-9">
-              <Field>
+            )}
+          />
+
+          <Controller
+            name="name"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor="name">Keterangan / Nama</FieldLabel>
-                <Input id="name" placeholder="Input nama alternatif disini" />
+                <Input
+                  {...field}
+                  id="name"
+                  placeholder="Input nama alternatif disini"
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
               </Field>
-            </div>
-          </div>
+            )}
+          />
 
-          {/* Grid Nilai Kriteria */}
-          <div className="space-y-3">
-            <p className="text-sm font-semibold">Nilai Kriteria</p>
-
-            <div className="max-h-[50vh] overflow-y-auto pr-2">
-              <FieldGroup className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
-                {criterias.map((criteria) => (
-                  <Field key={criteria.id}>
-                    {criteria.eval_type == "range" && (
-                      <>
-                        <FieldLabel
-                          htmlFor={`criteria-${criteria.id}`}
-                          className="truncate"
-                        >
-                          <span className="mr-1 font-mono text-muted-foreground">
-                            {criteria.code}:
-                          </span>
-                          {criteria.name}
-                        </FieldLabel>
-                        <Input
-                          id={`criteria-${criteria.id}`}
-                          type="number"
-                          step="any"
-                          placeholder={`Nilai ${criteria.name}`}
-                        />
-                      </>
-                    )}
-                    {criteria.eval_type == "exact" && (
-                      <>
-                        <FieldLabel
-                          htmlFor={`criteria-${criteria.id}`}
-                          className="truncate"
-                        >
-                          <span className="mr-1 font-mono text-muted-foreground">
-                            {criteria.code}:
-                          </span>
-                          {criteria.name}
-                        </FieldLabel>
-
-                        <Select>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Pilih nilai alternatif" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectGroup>
-                              {criteria.crips.map((crip) => (
-                                <SelectItem
-                                  key={crip.id}
-                                  value={crip.value.toString()}
-                                >
-                                  {crip.label}
-                                </SelectItem>
-                              ))}
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
-                      </>
-                    )}
-                  </Field>
-                ))}
-              </FieldGroup>
-            </div>
-          </div>
-
-          <DialogFooter className="gap-2 border-t border-border/50 pt-2 sm:gap-0">
-            <Button type="submit">Simpan</Button>
+          <DialogFooter className="pt-2">
+            <Button type="submit" disabled={isPending}>
+              {isPending ? "Menyimpan..." : "Simpan"}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
